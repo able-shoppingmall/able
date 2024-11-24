@@ -6,12 +6,13 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AddOrderResDto {
-    private final String STATUS_CODE = "Success";
-    private final String MESSAGE = "주문 완료";
-    private OrderInfo orderInfo;
+    private String productName;
+    private int price;
 
-    public static class OrderInfo {
-        private String productName;
-        private int price;
+    public static AddOrderResDto make(String productName, int price) {
+        return AddOrderResDto.builder()
+                .productName(productName)
+                .price(price)
+                .build();
     }
 }
