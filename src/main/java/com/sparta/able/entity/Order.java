@@ -1,5 +1,6 @@
 package com.sparta.able.entity;
 
+import com.sparta.able.dto.order.req.AddOrderReqDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order extends Timestamped{
+public class Order extends Timestamped {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
@@ -20,4 +21,11 @@ public class Order extends Timestamped{
 
     @Column(name = "PRODUCT_ID", nullable = false)
     private Long productId;
+
+    public static Order create(User user, Long productId) {
+        return Order.builder()
+                .user(user)
+                .productId(productId)
+                .build();
+    }
 }
