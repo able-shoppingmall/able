@@ -25,7 +25,7 @@ public class Product extends Timestamped {
     @Column(nullable = false)
     private int amount;
 
+    // API 테스트를 위해 임시로 String 으로 수정해 둠
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    private String category;
 }
