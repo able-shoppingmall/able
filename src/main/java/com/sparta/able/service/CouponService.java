@@ -49,6 +49,11 @@ public class CouponService {
             throw new IllegalStateException("다른 프로세스가 이미 쿠폰을 발급 중입니다.");
         }
 
+        // 락 획득 시도
+        if (!lockService.acquireLock(lockKey, lockValue,5000)) { // 5초 동안 락 유지
+            throw new IllegalStateException("쿠폰 발급 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.");
+        }
+
         try {
             Coupon coupon = couponRepository.findById(couponId)
                     .orElseThrow(() -> new IllegalArgumentException("해당 이벤트 쿠폰이 존재하지 않습니다."));
