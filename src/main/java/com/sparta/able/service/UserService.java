@@ -5,11 +5,8 @@ import com.sparta.able.config.jwt.JwtUtil;
 import com.sparta.able.dto.user.req.UserLoginRequestDto;
 import com.sparta.able.dto.user.req.UserSignupRequestDto;
 import com.sparta.able.dto.user.res.UserResponseDto;
-import com.sparta.able.dto.user.req.UserLoginRequest;
-import com.sparta.able.dto.user.req.UserSignupRequest;
-import com.sparta.able.dto.user.res.UserResponse;
-import com.sparta.able.exception.AuthException;
-import com.sparta.able.exception.InvalidRequestException;
+import com.sparta.able.exception.ApplicationException;
+import com.sparta.able.exception.ErrorCode;
 import com.sparta.able.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import com.sparta.able.entity.User;
@@ -25,7 +22,7 @@ public class UserService {
 
     public UserResponseDto SignupUser(UserSignupRequestDto usersignupRequestDto) {
         if(userRepository.existsByEmail(usersignupRequestDto.getEmail())){
-            throw new InvalidRequestException("이미 존재하는 이메일입니다");
+            throw new ApplicationException(ErrorCode.PRESENT_USER);
         }
 
         User user = new User(usersignupRequestDto.getName(), usersignupRequestDto.getEmail(), usersignupRequestDto.getPassword());
@@ -39,15 +36,15 @@ public class UserService {
 
     public UserResponseDto LoginUser(UserLoginRequestDto userLoginRequestDto) {
         User user = userRepository.findByEmail(userLoginRequestDto.getEmail()).orElseThrow(
-                ()-> new InvalidRequestException("이메일 또는 비밀번호가 잘못되었습니다")
+                ()-> new ApplicationException(ErrorCode.INCORRECT_FORMAT)
         );
 
         if(!passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
-            throw new InvalidRequestException("이메일 또는 비밀번호가 잘못되었습니다.");
+            throw new ApplicationException(ErrorCode.INCORRECT_FORMAT);
         }
 
         if(user.getDeletedAt() != null) {
-            throw new AuthException("탈퇴한 회원입니다");
+            throw new ApplicationException(ErrorCode.DELETED_USER);
         }
 
         String token = jwtUtil.createToken(user.getId(), user.getEmail(), user.getName(), "ROLE_USER");

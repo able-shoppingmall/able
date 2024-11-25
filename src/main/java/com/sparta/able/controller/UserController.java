@@ -5,14 +5,8 @@ import com.sparta.able.dto.user.req.UserSignupRequestDto;
 import com.sparta.able.dto.user.res.UserResponseDto;
 import com.sparta.able.service.UserService;
 import com.sparta.able.util.ResponseBodyDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import com.sparta.able.dto.user.req.UserLoginRequest;
-import com.sparta.able.dto.user.req.UserSignupRequest;
-import com.sparta.able.dto.user.res.UserResponse;
-import com.sparta.able.service.UserService;
-import com.sparta.able.util.ResponseBodyDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ResponseBodyDto<UserResponseDto>> SignupUser(@RequestBody UserSignupRequestDto userSignupRequestDto) {
+    public ResponseEntity<ResponseBodyDto<UserResponseDto>> SignupUser(@Valid @RequestBody UserSignupRequestDto userSignupRequestDto) {
         UserResponseDto userResponseDto = userService.SignupUser(userSignupRequestDto);
         ResponseBodyDto<UserResponseDto> responseBody = ResponseBodyDto.success("회원가입 성공", userResponseDto);
         return ResponseEntity.ok(responseBody);

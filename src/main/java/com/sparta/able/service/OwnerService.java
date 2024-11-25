@@ -5,7 +5,8 @@ import com.sparta.able.config.jwt.JwtUtil;
 import com.sparta.able.dto.owner.req.OwnerSignupRequestDto;
 import com.sparta.able.dto.owner.res.OwnerResponseDto;
 import com.sparta.able.entity.Owner;
-import com.sparta.able.exception.InvalidRequestException;
+import com.sparta.able.exception.ApplicationException;
+import com.sparta.able.exception.ErrorCode;
 import com.sparta.able.repository.OwnerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class OwnerService {
 
     public OwnerResponseDto SignupOwner(OwnerSignupRequestDto ownerSignupRequestDto) {
         if(ownerRepository.existsByEmail(ownerSignupRequestDto.getEmail())){
-            throw new InvalidRequestException("이미 존재하는 이메일입니다");
+            throw new ApplicationException(ErrorCode.PRESENT_USER);
         }
 
         Owner owner = new Owner(ownerSignupRequestDto.getName(), ownerSignupRequestDto.getEmail(), ownerSignupRequestDto.getPassword(), ownerSignupRequestDto.getStoreName());

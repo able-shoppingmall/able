@@ -7,8 +7,11 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
+    INCORRECT_FORMAT(HttpStatus.BAD_REQUEST, "NEWERROR01", "이메일 또는 비밀번호가 일치하지 않습니다."),
+    NOT_FOUND_TOKEN(HttpStatus.UNAUTHORIZED,"NEWERROR02", "토큰을 찾을 수 없습니다"),
+
     INVALID_FORMAT(HttpStatus.BAD_REQUEST, "ERR001","요청 값의 형식이 맞지 않습니다."),
-    DELETED_USER(HttpStatus.UNAUTHORIZED, "ERR002", "삭제된 유저입니다.."),
+    DELETED_USER(HttpStatus.UNAUTHORIZED, "ERR002", "삭제된 유저입니다."),
     PRESENT_USER(HttpStatus.UNPROCESSABLE_ENTITY, "ERR003", "이미 등록된 사용자입니다."),
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "ERR004", "유저가 올바르지 않습니다."),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND,"ERR005","유저를 찾을 수 없습니다."),
