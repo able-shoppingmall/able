@@ -1,15 +1,16 @@
 package com.sparta.able.entity;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @Table(name = "owners")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Owner extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +27,11 @@ public class Owner extends Timestamped {
 
     @Column(nullable = false)
     private String storeName;
+
+    public Owner(String name, String email, String password, String storeName) {
+        this.name = name;
+        this.email = email;
+        this.password = BCrypt.withDefaults().hashToString(BCrypt.MIN_COST, password.toCharArray());
+        this.storeName = storeName;
+    }
 }
