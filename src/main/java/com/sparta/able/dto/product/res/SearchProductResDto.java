@@ -8,14 +8,14 @@ import lombok.Getter;
 @Builder
 public class SearchProductResDto {
     private String name;
-    private String price;
+    private int price;
     private int count;
 
     public static SearchProductResDto make(Product product) {
         return SearchProductResDto.builder()
                 .name(product.getName())
-                .price(product.getName())
-                .count(product.getPrice())
+                .price(product.getPrice())
+                .count(product.getAmount())
                 .build();
     }
 }

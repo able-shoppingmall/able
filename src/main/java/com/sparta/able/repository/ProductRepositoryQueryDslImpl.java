@@ -23,7 +23,10 @@ public class ProductRepositoryQueryDslImpl implements ProductRepositoryQueryDsl 
     public Page<Product> findAllToKeyword(Pageable pageable, String keyword) {
         List<Product> foundProducts = jpaQueryFactory
                 .selectFrom(product)
-                .where(containKeywordToName(keyword))
+                .where(containKeywordToName(keyword),
+                        product.amount.gt(0),
+                        product.deletedAt.isNull()
+                )
                 .fetch();
 
         return new PageImpl<>(foundProducts, pageable, foundProducts.size());
