@@ -38,11 +38,11 @@ public class OwnerService {
     public OwnerResponseDto LoginOwner(OwnerLoginRequestDto ownerLoginRequestDto) {
 
         Owner owner = ownerRepository.findByEmail(ownerLoginRequestDto.getEmail()).orElseThrow(
-                ()-> new ApplicationException(ErrorCode.INCORRECT_FORMAT)
+                ()-> new InvalidRequestException("이메일 또는 비밀번호가 잘못되었습니다")
         );
 
         if(!passwordEncoder.matches(ownerLoginRequestDto.getPassword(), owner.getPassword())) {
-            throw new ApplicationException(ErrorCode.INCORRECT_FORMAT);
+            throw new InvalidRequestException("이메일 또는 비밀번호가 잘못되었습니다.");
         }
 
         String token = jwtUtil.createToken(owner.getId(), owner.getEmail(), owner.getName(), "ROLE_OWNER");
