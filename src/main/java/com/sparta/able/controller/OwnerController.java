@@ -1,5 +1,10 @@
 package com.sparta.able.controller;
 
+import com.sparta.able.dto.owner.req.OwnerSignupRequestDto;
+import com.sparta.able.dto.owner.res.OwnerResponseDto;
+import com.sparta.able.service.OwnerService;
+import com.sparta.able.util.ResponseBodyDto;
+import lombok.RequiredArgsConstructor;
 import com.sparta.able.dto.owner.req.OwnerLoginRequest;
 import com.sparta.able.dto.owner.req.OwnerSignupRequest;
 import com.sparta.able.dto.owner.res.OwnerResponse;
@@ -19,4 +24,10 @@ public class OwnerController {
 
     private final OwnerService ownerService;
 
+    @PostMapping
+    public ResponseEntity<ResponseBodyDto<OwnerResponseDto>> SignupOwner(@RequestBody OwnerSignupRequestDto ownerSignupRequestDto) {
+        OwnerResponseDto ownerResponseDto = ownerService.SignupOwner(ownerSignupRequestDto);
+        ResponseBodyDto<OwnerResponseDto> responseBody = ResponseBodyDto.success("회원가입 성공", ownerResponseDto);
+        return ResponseEntity.ok(responseBody);
+    }
 }

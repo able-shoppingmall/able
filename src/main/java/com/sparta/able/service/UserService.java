@@ -2,6 +2,9 @@ package com.sparta.able.service;
 
 import com.sparta.able.config.PasswordEncoder;
 import com.sparta.able.config.jwt.JwtUtil;
+import com.sparta.able.dto.user.req.UserLoginRequestDto;
+import com.sparta.able.dto.user.req.UserSignupRequestDto;
+import com.sparta.able.dto.user.res.UserResponseDto;
 import com.sparta.able.dto.user.req.UserLoginRequest;
 import com.sparta.able.dto.user.req.UserSignupRequest;
 import com.sparta.able.dto.user.res.UserResponse;
@@ -20,26 +23,26 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public UserResponse SignupUser(UserSignupRequest usersignupRequest) {
-        if(userRepository.existsByEmail(usersignupRequest.getEmail())){
+    public UserResponseDto SignupUser(UserSignupRequestDto usersignupRequestDto) {
+        if(userRepository.existsByEmail(usersignupRequestDto.getEmail())){
             throw new InvalidRequestException("이미 존재하는 이메일입니다");
         }
 
-        User user = new User(usersignupRequest.getName(), usersignupRequest.getEmail(), usersignupRequest.getPassword());
+        User user = new User(usersignupRequestDto.getName(), usersignupRequestDto.getEmail(), usersignupRequestDto.getPassword());
 
         userRepository.save(user);
 
         String token = jwtUtil.createToken(user.getId(), user.getEmail(), user.getName(), "ROLE_USER");
 
-        return new UserResponse(user.getEmail(), user.getName(), token);
+        return new UserResponseDto(user.getEmail(), user.getName(), token);
     }
 
-    public UserResponse LoginUser(UserLoginRequest userLoginRequest) {
-        User user = userRepository.findByEmail(userLoginRequest.getEmail()).orElseThrow(
+    public UserResponseDto LoginUser(UserLoginRequestDto userLoginRequestDto) {
+        User user = userRepository.findByEmail(userLoginRequestDto.getEmail()).orElseThrow(
                 ()-> new InvalidRequestException("이메일 또는 비밀번호가 잘못되었습니다")
         );
 
-        if(!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
+        if(!passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
             throw new InvalidRequestException("이메일 또는 비밀번호가 잘못되었습니다.");
         }
 
@@ -49,6 +52,7 @@ public class UserService {
 
         String token = jwtUtil.createToken(user.getId(), user.getEmail(), user.getName(), "ROLE_USER");
 
-        return new UserResponse(user.getEmail(), user.getName(), token);
+        return new UserResponseDto(user.getEmail(), user.getName(), token);
     }
+
 }

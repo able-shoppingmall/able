@@ -1,24 +1,31 @@
 package com.sparta.able.entity;
 
+import com.sparta.able.dto.order.req.AddOrderReqDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
+@Table(name = "ORDERS")
 @Getter
-@Setter
-@Table(name = "orders")
+@Builder
 @NoArgsConstructor
-public class Order extends Timestamped{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@AllArgsConstructor
+public class Order extends Timestamped {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(name = "PRODUCT_ID", nullable = false)
     private Long productId;
+
+    public static Order create(User user, Long productId) {
+        return Order.builder()
+                .user(user)
+                .productId(productId)
+                .build();
+    }
 }

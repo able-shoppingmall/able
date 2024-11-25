@@ -1,5 +1,11 @@
 package com.sparta.able.controller;
 
+import com.sparta.able.dto.user.req.UserLoginRequestDto;
+import com.sparta.able.dto.user.req.UserSignupRequestDto;
+import com.sparta.able.dto.user.res.UserResponseDto;
+import com.sparta.able.service.UserService;
+import com.sparta.able.util.ResponseBodyDto;
+import lombok.RequiredArgsConstructor;
 import com.sparta.able.dto.user.req.UserLoginRequest;
 import com.sparta.able.dto.user.req.UserSignupRequest;
 import com.sparta.able.dto.user.res.UserResponse;
@@ -21,16 +27,16 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ResponseBodyDto<UserResponse>> SignupUser(@RequestBody UserSignupRequest userSignupRequest) {
-        UserResponse userResponse = userService.SignupUser(userSignupRequest);
-        ResponseBodyDto<UserResponse> responseBody = ResponseBodyDto.success("회원가입 성공", userResponse);
+    public ResponseEntity<ResponseBodyDto<UserResponseDto>> SignupUser(@RequestBody UserSignupRequestDto userSignupRequestDto) {
+        UserResponseDto userResponseDto = userService.SignupUser(userSignupRequestDto);
+        ResponseBodyDto<UserResponseDto> responseBody = ResponseBodyDto.success("회원가입 성공", userResponseDto);
         return ResponseEntity.ok(responseBody);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseBodyDto<UserResponse>> LoginUser(@RequestBody UserLoginRequest userLoginRequest){
-        UserResponse userResponse = userService.LoginUser(userLoginRequest);
-        ResponseBodyDto<UserResponse> responseBody = ResponseBodyDto.success("로그인 성공", userResponse);
+    public ResponseEntity<ResponseBodyDto<UserResponseDto>> LoginUser(@RequestBody UserLoginRequestDto userLoginRequestDto){
+        UserResponseDto userResponseDto = userService.LoginUser(userLoginRequestDto);
+        ResponseBodyDto<UserResponseDto> responseBody = ResponseBodyDto.success("로그인 성공", userResponseDto);
         return ResponseEntity.ok(responseBody);
     }
 
