@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("/search")
+    @GetMapping("/search-v1")
     public ResponseEntity<ResponseBodyDto<Page<SearchProductResDto>>> searchProducts(@RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
                                                                                      @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                                                                      @RequestParam(name = "keyword", defaultValue = "") String keyword) {
