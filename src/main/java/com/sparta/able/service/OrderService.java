@@ -23,7 +23,7 @@ public class OrderService {
     @Transactional
     public AddOrderResDto addOrder(AddOrderReqDto request, User loginUser) {
         Product purchaseProduct = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_PRODUCT, "상품을 찾을 수 없습니다.");
+                .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_PRODUCT, "상품을 찾을 수 없습니다."));
 
         Order newOrder = Order.create(loginUser, purchaseProduct.getId());
         orderRepository.save(newOrder);
