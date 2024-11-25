@@ -8,4 +8,7 @@ import lombok.Setter;
 public class CouponRequestDto {
     private String name;
     private int count;
+
+    public CouponRequestDto(String testCoupon, int i) {
+    }
 }
