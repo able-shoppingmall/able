@@ -24,8 +24,8 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests)->
                 authorizeHttpRequests
-                        .requestMatchers("/api/user/**").permitAll()
-                        .requestMatchers("/api/owner/**").permitAll()
+                        .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/owners/**").permitAll()
                         .requestMatchers(HttpMethod.GET).permitAll()
                         .anyRequest().authenticated()
         );
