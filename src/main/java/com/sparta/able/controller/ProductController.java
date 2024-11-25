@@ -24,7 +24,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ResponseBodyDto<ProductResponseDto>> createMenu(@RequestBody ProductCreateRequestDto req, @PathVariable Long storeId, OwnerDetailsImpl authUser) {
         return new ResponseEntity<>(
-                ResponseBodyDto.success("메뉴 생성 완료",
+                ResponseBodyDto.success("상품 생성 완료",
                         productService.createProduct(req, authUser)),
                 HttpStatus.OK);
     }
