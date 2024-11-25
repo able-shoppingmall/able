@@ -51,5 +51,4 @@ public class UserService {
 
         return new UserResponse(user.getEmail(), user.getName(), token);
     }
-
 }
