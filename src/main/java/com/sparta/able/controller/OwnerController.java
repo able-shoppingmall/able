@@ -5,6 +5,12 @@ import com.sparta.able.dto.owner.res.OwnerResponseDto;
 import com.sparta.able.service.OwnerService;
 import com.sparta.able.util.ResponseBodyDto;
 import lombok.RequiredArgsConstructor;
+import com.sparta.able.dto.owner.req.OwnerLoginRequest;
+import com.sparta.able.dto.owner.req.OwnerSignupRequest;
+import com.sparta.able.dto.owner.res.OwnerResponse;
+import com.sparta.able.service.OwnerService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,5 +30,4 @@ public class OwnerController {
         ResponseBodyDto<OwnerResponseDto> responseBody = ResponseBodyDto.success("회원가입 성공", ownerResponseDto);
         return ResponseEntity.ok(responseBody);
     }
-
 }
