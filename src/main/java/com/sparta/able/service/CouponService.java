@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,13 +27,18 @@ public class CouponService {
         coupon.setStartAt(LocalDateTime.now());
         coupon.setEndAt(LocalDateTime.now().plusDays(30)); // 기본 만료 기간 30일
 
-        couponRepository.save(coupon);
+       couponRepository.save(coupon);
 
-        return new CouponResponseDto(coupon.getName(), coupon.getCount());
+        // 생성된 쿠폰 정보를 반환
+        return CouponResponseDto.builder()
+                .name(coupon.getName())
+                .count(coupon.getCount())
+                .build();
     }
 
+    // 선착순 쿠폰 발급
     @Transactional
-    public String issueEventCoupon(Long couponId) {
+    public void issueEventCoupon(Long couponId) {
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 이벤트 쿠폰이 존재하지 않습니다."));
 
@@ -48,7 +55,24 @@ public class CouponService {
         if (coupon.getCount() == 0) {
             coupon.setStatus(CouponStatus.EXPIRED);
         }
+    }
 
-        return "{\"statusCode\": \"Success\", \"message\": \"쿠폰 발급 성공\"}";
+    public List<CouponResponseDto> getAllCoupons() {
+        List<Coupon> coupons = couponRepository.findAll();
+        return coupons.stream()
+                .map(coupon -> new CouponResponseDto(
+                        coupon.getName(),
+                        coupon.getCount(),
+                        calculateDiscount(coupon.getName()) // 예제 할인율 계산
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private String calculateDiscount(String couponName) {
+        // 할인율 계산 로직 (예: 쿠폰 이름에 따라 할인율 설정)
+        if (couponName.contains("할인")) {
+            return "10%";
+        }
+        return "5%";
     }
 }
