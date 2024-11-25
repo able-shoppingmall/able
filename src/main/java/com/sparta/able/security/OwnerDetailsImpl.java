@@ -1,5 +1,6 @@
 package com.sparta.able.security;
 
+import com.sparta.able.entity.Owner;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
