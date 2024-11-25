@@ -22,12 +22,23 @@ public class ProductController {
 
     @Secured("ROLE_OWNER")
     @PostMapping
-    public ResponseEntity<ResponseBodyDto<ProductResponseDto>> createMenu(@RequestBody ProductCreateRequestDto req, @PathVariable Long storeId, OwnerDetailsImpl authUser) {
+    public ResponseEntity<ResponseBodyDto<ProductResponseDto>> createProduct(@RequestBody ProductCreateRequestDto req, OwnerDetailsImpl authUser) {
         return new ResponseEntity<>(
                 ResponseBodyDto.success("상품 생성 완료",
                         productService.createProduct(req, authUser)),
                 HttpStatus.OK);
     }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ResponseBodyDto<ProductResponseDto>> getProduct(@PathVariable Long productId) {
+        return new ResponseEntity<>(
+                ResponseBodyDto.success(
+                        "가게 단일 조회 성공",
+                        productService.getProduct(productId)
+                ),
+                HttpStatus.OK);
+    }
+
 
     @GetMapping("/search-v1")
     public ResponseEntity<ResponseBodyDto<SearchResultDto>> searchProducts(@RequestParam(name = "pageSize", defaultValue = "10") int pageSize,

@@ -5,6 +5,8 @@ import com.sparta.able.dto.product.res.ProductResponseDto;
 import com.sparta.able.dto.product.res.SearchProductResDto;
 import com.sparta.able.dto.product.res.SearchResultDto;
 import com.sparta.able.entity.Product;
+import com.sparta.able.exception.ApplicationException;
+import com.sparta.able.exception.ErrorCode;
 import com.sparta.able.repository.ProductRepository;
 import com.sparta.able.security.OwnerDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +32,13 @@ public class ProductService {
 
         List<SearchProductResDto> contents = searchResult.getContent().stream().map(SearchProductResDto::make).toList();
         return SearchResultDto.make(contents, searchResult.getPageable());
+    }
+
+    public ProductResponseDto getProduct(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_PRODUCT)
+        );
+
+        return product.toResponseDto();
     }
 }
