@@ -23,7 +23,7 @@ public class OwnerService {
 
     public OwnerResponseDto SignupOwner(OwnerSignupRequestDto ownerSignupRequestDto) {
         if(ownerRepository.existsByEmail(ownerSignupRequestDto.getEmail())){
-            throw new ApplicationException(ErrorCode.PRESENT_USER);
+            throw new ApplicationException(ErrorCode.PRESENT_USER, "이미 존재하는 이메일입니다");
         }
 
         Owner owner = new Owner(ownerSignupRequestDto.getName(), ownerSignupRequestDto.getEmail(), ownerSignupRequestDto.getPassword(), ownerSignupRequestDto.getStoreName());
@@ -38,11 +38,11 @@ public class OwnerService {
     public OwnerResponseDto LoginOwner(OwnerLoginRequestDto ownerLoginRequestDto) {
 
         Owner owner = ownerRepository.findByEmail(ownerLoginRequestDto.getEmail()).orElseThrow(
-                ()-> new ApplicationException(ErrorCode.INCORRECT_FORMAT)
+                ()-> new ApplicationException(ErrorCode.INCORRECT_FORMAT, "이메일 또는 비밀번호가 일치하지 않습니다")
         );
 
         if(!passwordEncoder.matches(ownerLoginRequestDto.getPassword(), owner.getPassword())) {
-            throw new ApplicationException(ErrorCode.INCORRECT_FORMAT);
+            throw new ApplicationException(ErrorCode.INCORRECT_FORMAT, "이메일 또는 비밀번호가 일치하지 않습니다");
         }
 
         String token = jwtUtil.createToken(owner.getId(), owner.getEmail(), owner.getName(), "ROLE_OWNER");
