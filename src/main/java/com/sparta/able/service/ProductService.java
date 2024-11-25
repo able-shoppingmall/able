@@ -1,5 +1,6 @@
 package com.sparta.able.service;
 
+import com.sparta.able.dto.product.res.SearchProductResDto;
 import com.sparta.able.entity.Product;
 import com.sparta.able.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,9 @@ import org.springframework.stereotype.Service;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    // 임시로 Page<Product> 타입을 반환하도록 구현, ResponseBodyDto 타입으로 수정해야 함
-    // Dto 생성시 페이지 번호 +1 해야 함
-    public Page<Product> searchProducts(Pageable pageable, String keyword) {
-        return productRepository.findAllToKeyword(pageable, keyword);
+    public Page<SearchProductResDto> searchProducts(Pageable pageable, String keyword) {
+        Page<Product> searchResult = productRepository.findAllToKeyword(pageable, keyword);
+
+        return searchResult.map(SearchProductResDto::make);
     }
 }
