@@ -1,5 +1,6 @@
 package com.sparta.able.security;
 
+import com.sparta.able.entity.Owner;
 import com.sparta.able.repository.OwnerRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

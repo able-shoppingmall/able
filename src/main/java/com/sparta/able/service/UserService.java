@@ -34,4 +34,21 @@ public class UserService {
         return new UserResponse(user.getEmail(), user.getName(), token);
     }
 
+    public UserResponse LoginUser(UserLoginRequest userLoginRequest) {
+        User user = userRepository.findByEmail(userLoginRequest.getEmail()).orElseThrow(
+                ()-> new InvalidRequestException("이메일 또는 비밀번호가 잘못되었습니다")
+        );
+
+        if(!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
+            throw new InvalidRequestException("이메일 또는 비밀번호가 잘못되었습니다.");
+        }
+
+        if(user.getDeletedAt() != null) {
+            throw new AuthException("탈퇴한 회원입니다");
+        }
+
+        String token = jwtUtil.createToken(user.getId(), user.getEmail(), user.getName(), "ROLE_USER");
+
+        return new UserResponse(user.getEmail(), user.getName(), token);
+    }
 }
