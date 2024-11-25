@@ -20,6 +20,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+.gitignore
 .idea
 *.iws
 *.iml
