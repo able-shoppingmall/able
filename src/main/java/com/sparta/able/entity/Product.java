@@ -26,5 +26,6 @@ public class Product extends Timestamped {
     private int amount;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Category category;
 }
