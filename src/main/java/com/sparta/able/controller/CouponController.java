@@ -30,6 +30,7 @@ public class CouponController {
     //선착순 쿠폰 발급
     @PostMapping("/event/{id}")
     public ResponseEntity<ResponseBodyDto<String>> issueEventCoupon(@PathVariable Long id) {
+        CouponResponseDto couponResponseDto = couponService.issueEventCoupon(id);
 
         return new ResponseEntity<>(
                 ResponseBodyDto.success("선착순 쿠폰 발급 완료"),

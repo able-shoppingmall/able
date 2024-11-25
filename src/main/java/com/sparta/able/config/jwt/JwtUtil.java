@@ -1,5 +1,7 @@
 package com.sparta.able.config.jwt;
 
+import com.sparta.able.exception.ApplicationException;
+import com.sparta.able.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -9,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import com.sparta.able.exception.ServerException;
 
 import java.security.Key;
 import java.util.Base64;
@@ -53,7 +54,7 @@ public class JwtUtil {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        throw new ServerException("토큰을 찾을 수 없습니다");
+        throw new ApplicationException(ErrorCode.NOT_FOUND_TOKEN);
     }
 
     public Claims extractClaims(String token) {
