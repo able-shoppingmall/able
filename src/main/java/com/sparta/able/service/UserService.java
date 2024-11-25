@@ -22,7 +22,7 @@ public class UserService {
 
     public UserResponseDto SignupUser(UserSignupRequestDto usersignupRequestDto) {
         if(userRepository.existsByEmail(usersignupRequestDto.getEmail())){
-            throw new ApplicationException(ErrorCode.PRESENT_USER);
+            throw new ApplicationException(ErrorCode.PRESENT_USER, "이미 존재하는 이메일입니다");
         }
 
         User user = new User(usersignupRequestDto.getName(), usersignupRequestDto.getEmail(), usersignupRequestDto.getPassword());
@@ -36,11 +36,11 @@ public class UserService {
 
     public UserResponseDto LoginUser(UserLoginRequestDto userLoginRequestDto) {
         User user = userRepository.findByEmail(userLoginRequestDto.getEmail()).orElseThrow(
-                ()-> new ApplicationException(ErrorCode.INCORRECT_FORMAT)
+                ()-> new ApplicationException(ErrorCode.INCORRECT_FORMAT, "이메일 또는 비밀번호가 일치하지 않습니다")
         );
 
         if(!passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
-            throw new ApplicationException(ErrorCode.INCORRECT_FORMAT);
+            throw new ApplicationException(ErrorCode.INCORRECT_FORMAT, "이메일 또는 비밀번호가 일치하지 않습니다");
         }
 
         if(user.getDeletedAt() != null) {
