@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class ProductController {
 
     @Secured("ROLE_OWNER")
     @PostMapping
-    public ResponseEntity<ResponseBodyDto<ProductResponseDto>> createProduct(@RequestBody ProductCreateRequestDto req, OwnerDetailsImpl authUser) {
+    public ResponseEntity<ResponseBodyDto<ProductResponseDto>> createProduct(@RequestBody ProductCreateRequestDto req, @AuthenticationPrincipal OwnerDetailsImpl authUser) {
         return new ResponseEntity<>(
                 ResponseBodyDto.success("상품 생성 완료",
                         productService.createProduct(req, authUser)),

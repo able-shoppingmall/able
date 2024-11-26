@@ -20,6 +20,8 @@ public class OwnerDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Owner owner = ownerRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + email));
+
+
         return new OwnerDetailsImpl(owner);
     }
 }

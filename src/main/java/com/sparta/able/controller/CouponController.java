@@ -27,15 +27,13 @@ public class CouponController {
                 HttpStatus.OK);
     }
 
-    //선착순 쿠폰 발급
+    // 선착순 쿠폰 발급
     @PostMapping("/event/{id}")
-    public ResponseEntity<ResponseBodyDto<String>> issueEventCoupon(@PathVariable Long id) {
-        CouponResponseDto couponResponseDto = couponService.issueEventCoupon(id);
-
+    public ResponseEntity<ResponseBodyDto<CouponResponseDto>> issueEventCoupon(@PathVariable Long id) {
         return new ResponseEntity<>(
-                ResponseBodyDto.success("선착순 쿠폰 발급 완료"),
-                HttpStatus.OK);
-
+                ResponseBodyDto.success("선착순 쿠폰 발급 완료", couponService.issueEventCoupon(id)),
+                HttpStatus.OK
+        );
     }
 
     // 발급받은 쿠폰 조회

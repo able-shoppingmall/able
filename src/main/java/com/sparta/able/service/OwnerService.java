@@ -33,6 +33,7 @@ public class OwnerService {
         String token = jwtUtil.createToken(owner.getId(), owner.getName(), owner.getEmail(),"ROLE_OWNER");
 
         return new OwnerResponseDto(owner.getName(), owner.getEmail(), owner.getStoreName(), token);
+
     }
 
     public OwnerResponseDto LoginOwner(OwnerLoginRequestDto ownerLoginRequestDto) {
