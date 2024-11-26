@@ -29,9 +29,9 @@ public class UserService {
 
         userRepository.save(user);
 
-        String token = jwtUtil.createToken(user.getId(), user.getEmail(), user.getName(), "ROLE_USER");
+        String token = jwtUtil.createToken(user.getId(), user.getName(), user.getEmail(), "ROLE_USER");
 
-        return new UserResponseDto(user.getEmail(), user.getName(), token);
+        return new UserResponseDto(user.getName(), user.getEmail(), token);
     }
 
     public UserResponseDto LoginUser(UserLoginRequestDto userLoginRequestDto) {
@@ -47,9 +47,9 @@ public class UserService {
             throw new ApplicationException(ErrorCode.DELETED_USER);
         }
 
-        String token = jwtUtil.createToken(user.getId(), user.getEmail(), user.getName(), "ROLE_USER");
+        String token = jwtUtil.createToken(user.getId(), user.getName(), user.getEmail(), "ROLE_USER");
 
-        return new UserResponseDto(user.getEmail(), user.getName(), token);
+        return new UserResponseDto( user.getName(), user.getEmail(), token);
     }
 
 }
