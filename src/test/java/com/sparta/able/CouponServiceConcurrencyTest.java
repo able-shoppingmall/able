@@ -10,7 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,6 +29,9 @@ public class CouponServiceConcurrencyTest {
     @Autowired
     private CouponRepository couponRepository;
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
     private Long couponId;
 
     @BeforeEach
@@ -33,9 +39,14 @@ public class CouponServiceConcurrencyTest {
         // 테스트용 쿠폰 데이터 생성
         CouponRequestDto requestDto = new CouponRequestDto("Test Coupon", 10); // 쿠폰 수량 10개
         CouponResponseDto responseDto = couponService.createCoupon(requestDto);
-        Coupon coupon = couponRepository.findByName("Test Coupon").orElseThrow();
+
+        // 첫 번째 쿠폰만 가져오기
+        Coupon coupon = couponRepository.findFirstByName("Test Coupon")
+                .orElseThrow(() -> new IllegalStateException("Test coupon not found."));
+
         this.couponId = coupon.getId();
     }
+
 
     @Test
     void 동시성_테스트()  {
@@ -64,4 +75,33 @@ public class CouponServiceConcurrencyTest {
         System.out.println("Remaining Coupons: " + coupon.getCount());
         assertThat(coupon.getCount()).isGreaterThanOrEqualTo(0); // 음수 여부 확인
     }
+
+    @Test
+    void 쿠폰_발급_테스트() {
+        Long couponId = 1L;
+
+        // 쿠폰 재고 초기화
+        couponService.initializeCouponStock(couponId, 10);
+
+        // Redis에서 초기 재고 값 확인
+        String initialStockString = (String) redisTemplate.opsForValue().get("coupon_stock:" + couponId);
+        Integer initialStock = (initialStockString != null) ? Integer.valueOf(initialStockString) : 0;
+        System.out.println("초기 재고: " + initialStock);
+        assertThat(initialStock).isEqualTo(10);  // 초기 재고가 10인지 확인
+
+        // 쿠폰 발급 테스트
+        for (int i = 0; i < 15; i++) {
+            try {
+                CouponResponseDto response = couponService.issueEventCoupon(couponId);
+                // 쿠폰 발급 성공 시 출력
+                String remainingStockString = (String) redisTemplate.opsForValue().get("coupon_stock:" + couponId);
+                Integer remainingStock = (remainingStockString != null) ? Integer.valueOf(remainingStockString) : 0;
+                System.out.println("쿠폰 발급 성공: " + response.getName() + ", 남은 재고: " + remainingStock);
+            } catch (Exception e) {
+                // 발급 실패 시 출력
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+    }
+
 }
