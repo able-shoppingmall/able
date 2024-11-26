@@ -30,9 +30,9 @@ public class OwnerService {
 
         ownerRepository.save(owner);
 
-        String token = jwtUtil.createToken(owner.getId(), owner.getEmail(), owner.getName(), "ROLE_OWNER");
+        String token = jwtUtil.createToken(owner.getId(), owner.getName(), owner.getEmail(),"ROLE_OWNER");
 
-        return new OwnerResponseDto(owner.getEmail(), owner.getName(), owner.getStoreName(), token);
+        return new OwnerResponseDto(owner.getName(), owner.getEmail(), owner.getStoreName(), token);
     }
 
     public OwnerResponseDto LoginOwner(OwnerLoginRequestDto ownerLoginRequestDto) {
@@ -45,8 +45,8 @@ public class OwnerService {
             throw new ApplicationException(ErrorCode.INCORRECT_FORMAT, "이메일 또는 비밀번호가 일치하지 않습니다");
         }
 
-        String token = jwtUtil.createToken(owner.getId(), owner.getEmail(), owner.getName(), "ROLE_OWNER");
+        String token = jwtUtil.createToken(owner.getId(), owner.getName(), owner.getEmail(), "ROLE_OWNER");
 
-        return new OwnerResponseDto(owner.getEmail(), owner.getName(), owner.getStoreName(), token);
+        return new OwnerResponseDto(owner.getName(), owner.getEmail(), owner.getStoreName(), token);
     }
 }
