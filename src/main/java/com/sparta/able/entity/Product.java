@@ -1,6 +1,5 @@
 package com.sparta.able.entity;
 
-import com.sparta.able.dto.product.req.ProductCreateRequestDto;
 import com.sparta.able.dto.product.res.ProductResponseDto;
 import com.sparta.able.enums.Category;
 import jakarta.persistence.*;
@@ -27,7 +26,6 @@ public class Product extends Timestamped {
     @Column(nullable = false)
     private int amount;
 
-    // API 테스트를 위해 임시로 String 으로 수정해 둠
     @Column(nullable = false)
     private Category category;
 
