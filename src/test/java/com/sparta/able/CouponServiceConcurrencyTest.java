@@ -38,7 +38,7 @@ public class CouponServiceConcurrencyTest {
     }
 
     @Test
-    void 동시성_테스트() throws InterruptedException {
+    void 동시성_테스트()  {
         int threadCount = 50; // 동시에 요청하는 사용자 수
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CyclicBarrier barrier = new CyclicBarrier(threadCount);
