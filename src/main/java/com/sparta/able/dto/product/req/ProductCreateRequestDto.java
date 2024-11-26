@@ -26,6 +26,7 @@ public class ProductCreateRequestDto {
         return Product.builder()
                 .name(this.name)
                 .price(this.price)
+                .amount(this.amount)
                 .category(Category.parseCategory(category))
                 .owner(owner)
                 .build();
