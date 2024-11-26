@@ -13,9 +13,20 @@ public class Keyword extends Timestamped {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "KEYWORD", nullable = false)
+    @Column(name = "KEYWORD", nullable = false, unique = true)
     private String keyword;
 
     @Column(name = "USED_COUNT", nullable = false)
-    private int used_count;
+    @Builder.Default
+    private int usedCount = 1;
+
+    public static Keyword create(String keyword) {
+        return Keyword.builder()
+                .keyword(keyword)
+                .build();
+    }
+
+    public void addUsedCount() {
+        usedCount++;
+    }
 }
