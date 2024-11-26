@@ -55,6 +55,7 @@ public class JwtFilter implements Filter {
             UserDetails userDetails;
             if ("ROLE_OWNER".equals(role)) {
                 userDetails = ownerDetailsService.loadUserByUsername(email);
+
             } else {
                 userDetails = userDetailsService.loadUserByUsername(email);
             }

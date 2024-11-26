@@ -50,9 +50,9 @@ public class CouponService {
         }
 
         // 락 획득 시도
-        if (!lockService.acquireLock(lockKey, lockValue,5000)) { // 5초 동안 락 유지
-            throw new IllegalStateException("쿠폰 발급 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.");
-        }
+//        if (!lockService.acquireLock(lockKey, lockValue,5000)) { // 5초 동안 락 유지
+//            throw new IllegalStateException("쿠폰 발급 요청이 너무 많습니다. 잠시 후 다시 시도해주세요.");
+//        }
 
         try {
             Coupon coupon = couponRepository.findById(couponId)
