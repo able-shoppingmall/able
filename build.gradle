@@ -23,6 +23,8 @@ repositories {
     mavenCentral()
 }
 
+
+
 dependencies {
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -76,6 +78,9 @@ dependencies {
 
     // Lettuce 클라이언트 (Spring Boot의 기본 Redis 클라이언트)
     //implementation 'io.lettuce.core:lettuce-core'
+
+    //cache
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.1.8'
 
 
 }
