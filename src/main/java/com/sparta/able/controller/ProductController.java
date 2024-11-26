@@ -27,7 +27,7 @@ public class ProductController {
 
     @Secured("ROLE_OWNER")
     @PostMapping
-    public ResponseEntity<ResponseBodyDto<ProductResponseDto>> createProduct(@RequestBody ProductCreateRequestDto req, OwnerDetailsImpl authUser) {
+    public ResponseEntity<ResponseBodyDto<ProductResponseDto>> createProduct(@RequestBody ProductCreateRequestDto req, @AuthenticationPrincipal OwnerDetailsImpl authUser) {
         return new ResponseEntity<>(
                 ResponseBodyDto.success("상품 생성 완료",
                         productService.createProduct(req, authUser)),
