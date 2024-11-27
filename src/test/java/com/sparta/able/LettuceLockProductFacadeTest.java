@@ -1,15 +1,20 @@
 package com.sparta.able;
 
+import com.sparta.able.entity.Owner;
 import com.sparta.able.entity.Product;
+import com.sparta.able.enums.Category;
 import com.sparta.able.exception.ApplicationException;
 import com.sparta.able.exception.ErrorCode;
-import com.sparta.able.redis.LettuceLockProductFacade;
+import com.sparta.able.redis.LettuceLockFacade;
 import com.sparta.able.repository.OwnerRepository;
 import com.sparta.able.repository.ProductRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class LettuceLockProductFacadeTest {
     @Autowired
-    private LettuceLockProductFacade lettuceLockProductFacade;
+    private LettuceLockFacade lettuceLockProductFacade;
 
     @Autowired
     private ProductRepository productRepository;
@@ -28,11 +33,10 @@ class LettuceLockProductFacadeTest {
     private OwnerRepository ownerRepository;
 
     // 각 테스트가 실행되기 전에 데이터베이스에 테스트 데이터 생성
-/*    @BeforeEach
+    @BeforeEach
     public void before() {
         Owner owner = ownerRepository.findById(1L).orElseThrow(null);
         Product product = new Product();
-        product.setId(1L);
         product.setOwner(owner);
         product.setName("test");
         product.setPrice(1000);
@@ -41,19 +45,24 @@ class LettuceLockProductFacadeTest {
         product.setCreatedAt(LocalDateTime.now());
         product.setModifiedAt(LocalDateTime.now());
 
-        productRepository.save(product);
-    }*/
+        productRepository.saveAndFlush(product);
+    }
 
     // 각 테스트를 실행한 후에 데이터베이스에 테스트 데이터 삭제
-/*
     @AfterEach
     public void after() {
         productRepository.deleteAll();
     }
-*/
 
     @Test
     public void 동시에_100개의_요청() throws InterruptedException {
+
+        Product product = productRepository.findByName("test").orElseThrow(
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_PRODUCT)
+        );
+
+        Long id = product.getId();
+
         // when
         // 100개의 쓰레드 사용(멀티스레드)
         int threadCount = 100;
@@ -67,7 +76,7 @@ class LettuceLockProductFacadeTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    lettuceLockProductFacade.decrease(1L, 1);
+                    lettuceLockProductFacade.decrease(Product.class, id, 1);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 } finally {
@@ -78,9 +87,10 @@ class LettuceLockProductFacadeTest {
         latch.await();
 
         // then
-        Product product = productRepository.findById(1L).orElseThrow(
+        product = productRepository.findByName("test").orElseThrow(
                 () -> new ApplicationException(ErrorCode.NOT_FOUND_PRODUCT)
         );
+
         assertEquals(0, product.getAmount());
     }
 }

@@ -28,10 +28,11 @@ public class CouponController {
     }
 
     // 선착순 쿠폰 발급
-    @PostMapping("/event/{id}")
-    public ResponseEntity<ResponseBodyDto<CouponResponseDto>> issueEventCoupon(@PathVariable Long id) {
+    @PostMapping("/{couponId}/decrease")
+    public ResponseEntity<ResponseBodyDto<CouponResponseDto>> decreaseCouponStock(@PathVariable Long couponId, @RequestParam int amount) {
+        couponService.decrease(couponId, amount);
         return new ResponseEntity<>(
-                ResponseBodyDto.success("선착순 쿠폰 발급 완료", couponService.issueEventCoupon(id)),
+                ResponseBodyDto.success("선착순 쿠폰 발급 완료"),
                 HttpStatus.OK
         );
     }
