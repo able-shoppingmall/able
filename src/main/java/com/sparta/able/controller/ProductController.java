@@ -9,6 +9,7 @@ import com.sparta.able.service.KeywordService;
 import com.sparta.able.service.ProductService;
 import com.sparta.able.util.ResponseBodyDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -59,6 +60,22 @@ public class ProductController {
 
     @GetMapping("/search-v1")
     public ResponseEntity<ResponseBodyDto<SearchResultDto>> searchProducts(@RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
+                                                                           @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                                                                           @RequestParam(name = "keyword", defaultValue = "") String keyword) {
+        if (StringUtils.hasText(keyword)) {
+            keywordService.updateKeyword(keyword);
+        }
+
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+        SearchResultDto data = productService.searchProducts(pageable, keyword);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseBodyDto.success("상품 검색 성공", data));
+    }
+
+    @GetMapping("/search-v2")
+    @Cacheable(value = "searchCount", key= "#keyword")
+    public ResponseEntity<ResponseBodyDto<SearchResultDto>> searchProducts2(@RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
                                                                            @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                                                            @RequestParam(name = "keyword", defaultValue = "") String keyword) {
         if (StringUtils.hasText(keyword)) {
