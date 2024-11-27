@@ -28,7 +28,7 @@ public class KeywordController {
 
     @GetMapping("/cache")
     public ResponseEntity<ResponseBodyDto<FindKeywordRankingResDto>> findKeywordCache() {
-        ResponseBodyDto<FindKeywordRankingResDto> responseBody = keywordCacheService.findKeyWordRank();
+        ResponseBodyDto<FindKeywordRankingResDto> responseBody = keywordCacheService.findKeywordRank();
 
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }

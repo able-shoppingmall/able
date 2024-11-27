@@ -83,10 +83,8 @@ public class ProductController {
                                                                            @RequestParam(name = "keyword", defaultValue = "") String keyword) {
         log.info("로직 시작");
         if (StringUtils.hasText(keyword)) {
-            int result = keywordCacheService.addCache(keyword);
-            int r2 = keywordCacheService.updateCache(keyword, result);
-            log.info("result = {}", result);
-            log.info("r2 = {}", r2);
+            int usedCount = keywordCacheService.addCache(keyword);
+            keywordCacheService.updateCache(keyword, usedCount);
         }
 
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize);

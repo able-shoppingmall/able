@@ -33,7 +33,7 @@ public class KeywordCacheService {
         return currentUsedCount+1;
     }
 
-    public ResponseBodyDto<FindKeywordRankingResDto> findKeyWordRank() {
+    public ResponseBodyDto<FindKeywordRankingResDto> findKeywordRank() {
         ConcurrentMapCache cache = (ConcurrentMapCache) cacheManager.getCache("keywords");
 
         if (cache == null) {
