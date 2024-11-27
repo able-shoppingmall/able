@@ -20,7 +20,7 @@ public class LockService {
     /**
      * Redis 분산 락 획득
      */
-    private boolean acquireLock(String lockKey, long expireTime) {
+    boolean acquireLock(String lockKey, long expireTime) {
         Boolean success = redisTemplate.opsForValue().setIfAbsent(lockKey, "LOCK", expireTime, TimeUnit.MILLISECONDS);
         return Boolean.TRUE.equals(success);
     }
@@ -28,7 +28,7 @@ public class LockService {
     /**
      * Redis 락 해제
      */
-    private void releaseLock(String lockKey) {
+    void releaseLock(String lockKey) {
         redisTemplate.delete(lockKey);
     }
 }

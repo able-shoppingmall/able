@@ -50,6 +50,7 @@ public class CouponServiceConcurrencyTest {
 
     @Test
     void 동시성_테스트()  {
+        int amount = 1; // 한 번에 감소시킬 쿠폰 수량
         int threadCount = 50; // 동시에 요청하는 사용자 수
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CyclicBarrier barrier = new CyclicBarrier(threadCount);
@@ -58,7 +59,7 @@ public class CouponServiceConcurrencyTest {
             executorService.submit(() -> {
                 try {
                     barrier.await(); // 모든 스레드가 준비될 때까지 대기
-                    couponService.issueEventCoupon(couponId);
+                    couponService.decrease(couponId, amount);
                 } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -79,7 +80,7 @@ public class CouponServiceConcurrencyTest {
     @Test
     void 쿠폰_발급_테스트() {
         Long couponId = 1L;
-
+        int amount = 1; // 한 번에 감소시킬 쿠폰 수량
         // 쿠폰 재고 초기화
         couponService.initializeCouponStock(couponId, 10);
 
@@ -92,11 +93,11 @@ public class CouponServiceConcurrencyTest {
         // 쿠폰 발급 테스트
         for (int i = 0; i < 15; i++) {
             try {
-                CouponResponseDto response = couponService.issueEventCoupon(couponId);
+                couponService.decrease(couponId, amount);
                 // 쿠폰 발급 성공 시 출력
                 String remainingStockString = (String) redisTemplate.opsForValue().get("coupon_stock:" + couponId);
                 Integer remainingStock = (remainingStockString != null) ? Integer.valueOf(remainingStockString) : 0;
-                System.out.println("쿠폰 발급 성공: " + response.getName() + ", 남은 재고: " + remainingStock);
+                System.out.println(" 남은 재고: " + remainingStock);
             } catch (Exception e) {
                 // 발급 실패 시 출력
                 System.out.println("Error: " + e.getMessage());
