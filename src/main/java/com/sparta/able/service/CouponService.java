@@ -4,6 +4,7 @@ import com.sparta.able.dto.coupon.req.CouponRequestDto;
 import com.sparta.able.dto.coupon.res.CouponResponseDto;
 import com.sparta.able.entity.Coupon;
 import com.sparta.able.enums.CouponStatus;
+import com.sparta.able.redis.LockableService;
 import com.sparta.able.repository.CouponRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 
 //Redis 기반 선착순 쿠폰 발급
-public class CouponService {
+public class CouponService implements LockableService<Coupon> {
 
     private static final String COUPON_LOCK_KEY_PREFIX = "coupon_lock_";
     private static final long LOCK_EXPIRE_TIME = 5000L; // 5초

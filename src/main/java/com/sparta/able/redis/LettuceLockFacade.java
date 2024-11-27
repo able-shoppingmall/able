@@ -1,12 +1,13 @@
 package com.sparta.able.redis;
 
-import com.sparta.able.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 @RequiredArgsConstructor
-public class LettuceLockProductFacade {
+public class LettuceLockFacade {
 
     private final RedisLockRepository redisLockRepository;
     private final Map<Class<?>, LockableService<?>> serviceMap;
