@@ -77,6 +77,8 @@ dependencies {
     // Lettuce 클라이언트 (Spring Boot의 기본 Redis 클라이언트)
     //implementation 'io.lettuce.core:lettuce-core'
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 
 }
 
