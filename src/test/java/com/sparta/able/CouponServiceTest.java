@@ -25,7 +25,7 @@ public class CouponServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(() -> {
                 try {
-                    couponService.issueEventCoupon(1L); // 쿠폰 ID 1에 대해 발급 요청
+                    couponService.decrease(1L, 1); // 쿠폰 ID 1에 대해 발급 요청
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 } finally {

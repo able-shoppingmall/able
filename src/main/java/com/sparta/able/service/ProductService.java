@@ -8,6 +8,7 @@ import com.sparta.able.dto.product.res.SearchResultDto;
 import com.sparta.able.entity.Product;
 import com.sparta.able.exception.ApplicationException;
 import com.sparta.able.exception.ErrorCode;
+import com.sparta.able.redis.LockableService;
 import com.sparta.able.repository.ProductRepository;
 import com.sparta.able.security.OwnerDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class ProductService implements LockableService<Product> {
 
     private final ProductRepository productRepository;
 

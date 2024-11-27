@@ -12,18 +12,18 @@ public class RedisLockRepository {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public Boolean lock(final Long key) {
+    public Boolean lock(final String entityType, final Long id) {
         return redisTemplate
                 .opsForValue()
                 //setnx 명령어 사용 - key(key) value("lock")
-                .setIfAbsent(generateKey(key), "lock", Duration.ofMillis(3_000));
+                .setIfAbsent(generateKey(entityType, id), "lock", Duration.ofMillis(3_000));
     }
 
-    public Boolean unlock(final Long key) {
-        return redisTemplate.delete(generateKey(key));
+    public Boolean unlock(final String entityType, final Long id) {
+        return redisTemplate.delete(generateKey(entityType, id));
     }
 
-    private String generateKey(final Long key) {
-        return key.toString();
+    private String generateKey(final String entityType, final Long id) {
+        return entityType + ":" + id;
     }
 }
