@@ -53,4 +53,13 @@ public class ProductService {
 
         return new ProductListResponseDto(slice);
     }
+
+    public void decrease(Long id, int purchasedAmount) {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new ApplicationException(ErrorCode.NOT_FOUND_PRODUCT)
+        );
+
+        product.decrease(purchasedAmount);
+        productRepository.save(product);
+    }
 }

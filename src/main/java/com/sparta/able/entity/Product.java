@@ -2,6 +2,8 @@ package com.sparta.able.entity;
 
 import com.sparta.able.dto.product.res.ProductResponseDto;
 import com.sparta.able.enums.Category;
+import com.sparta.able.exception.ApplicationException;
+import com.sparta.able.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,15 +35,23 @@ public class Product extends Timestamped {
     @JoinColumn(name = "owner_id", nullable = false)
     private Owner owner;
 
-    public ProductResponseDto toResponseDto(){
+    public ProductResponseDto toResponseDto() {
         return new ProductResponseDto(
-            id,
-            name,
-            price,
-            amount,
-            category,
-            getCreatedAt(),
-            getModifiedAt()
+                id,
+                name,
+                price,
+                amount,
+                category,
+                getCreatedAt(),
+                getModifiedAt()
         );
+    }
+
+    public void decrease(int purchasedAmount) {
+        if (amount - purchasedAmount < 0) {
+            throw new ApplicationException(ErrorCode.INSUFFICIENT_STOCK);
+        }
+
+        amount -= purchasedAmount;
     }
 }
