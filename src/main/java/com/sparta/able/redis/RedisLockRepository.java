@@ -36,7 +36,7 @@ public class RedisLockRepository {
     }
 
 
-    private String generateKey(final String entityType, final Long id) {
+    public String generateKey(final String entityType, final Long id) {
         return entityType + ":" + id;
     }
 }
