@@ -33,11 +33,11 @@ public class CouponServiceConcurrencyTest {
     @BeforeEach
     void setup() {
         // 테스트용 쿠폰 데이터 생성 (1000개 쿠폰 생성)
-        CouponRequestDto requestDto = new CouponRequestDto("Test Coupon2", 1000); // 쿠폰 수량 1000개
+        CouponRequestDto requestDto = new CouponRequestDto("Test Coupon6", 1000); // 쿠폰 수량 1000개
         couponService.createCoupon(requestDto);
 
         // 첫 번째 쿠폰만 가져오기
-        Coupon coupon = couponRepository.findFirstByName("Test Coupon2")
+        Coupon coupon = couponRepository.findFirstByName("Test Coupon6")
                 .orElseThrow(() -> new IllegalStateException("Test coupon not found."));
 
         this.couponId = coupon.getId();
@@ -48,7 +48,7 @@ public class CouponServiceConcurrencyTest {
 
     @Test
     void 대규모_동시성_쿠폰_발급_테스트() throws InterruptedException {
-        int threadCount = 500; // 5000명의 동시 요청
+        int threadCount = 500; // 500명의 동시 요청
         int amount = 1; // 한 번에 감소시킬 쿠폰 수량
 
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
