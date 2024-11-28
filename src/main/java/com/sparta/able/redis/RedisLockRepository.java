@@ -1,7 +1,6 @@
 package com.sparta.able.redis;
 
 import java.time.Duration;
-import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -36,9 +35,8 @@ public class RedisLockRepository {
         return redisTemplate.delete(generateKey(entityType, id));
     }
 
-    public String generateKey(final String entityType, final Long id) {
+
+    private String generateKey(final String entityType, final Long id) {
         return entityType + ":" + id;
     }
-
-
 }
