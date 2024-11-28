@@ -79,7 +79,7 @@ public class CouponServiceConcurrencyTest {
 
     @Test
     void 쿠폰_발급_테스트() {
-        Long couponId = 1L;
+        Long couponId = 3L;
         int amount = 1; // 한 번에 감소시킬 쿠폰 수량
         // 쿠폰 재고 초기화
         couponService.initializeCouponStock(couponId, 10);
