@@ -29,9 +29,9 @@ public class RedisConfig {
         configuration.setPort(6379); // Redis 기본 포트
         configuration.setPassword(password); // 비밀번호 설정
 
-        return new LettuceConnectionFactory(configuration); // Redis 호스트와 포트 설정
+        //return new LettuceConnectionFactory(configuration); // Redis 호스트와 포트 설정
 
-        //return new LettuceConnectionFactory("localhost", 6379); // Redis 호스트와 포트 설정
+        return new LettuceConnectionFactory("localhost", 6379); // Redis 호스트와 포트 설정
     }
 
     // RedisTemplate 설정
