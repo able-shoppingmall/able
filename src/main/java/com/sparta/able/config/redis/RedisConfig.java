@@ -14,6 +14,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
+    /* application.properties 에 host, password 가 들어있어야 함 */
     @Value("${spring.data.redis.host}")
     private String host;
 
@@ -24,6 +25,7 @@ public class RedisConfig {
     // RedisConnectionFactory 설정 (Lettuce 사용)
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
+        /* AWS로 접속 시 */
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(host);
         configuration.setPort(6379); // Redis 기본 포트
@@ -31,6 +33,8 @@ public class RedisConfig {
 
         return new LettuceConnectionFactory(configuration); // Redis 호스트와 포트 설정
 
+
+        /* 로컬에서 접속 시 */
         //return new LettuceConnectionFactory("localhost", 6379); // Redis 호스트와 포트 설정
     }
 
@@ -49,8 +53,8 @@ public class RedisConfig {
     @Bean
     public RedisCommands<String, String> redisCommands() {
         // Redis 서버에 연결하기 위한 RedisClient 생성
-        // RedisClient redisClient = RedisClient.create("redis://" + password + "@" + host + ":6379");
-        RedisClient redisClient = RedisClient.create("redis://localhost:6379");
+         RedisClient redisClient = RedisClient.create("redis://" + password + "@" + host + ":6379");
+        // RedisClient redisClient = RedisClient.create("redis://localhost:6379");
         return redisClient.connect().sync(); // RedisCommands 빈 반환
     }
 }
