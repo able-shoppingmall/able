@@ -26,16 +26,16 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         /* AWS로 접속 시 */
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-        configuration.setHostName(host);
-        configuration.setPort(6379); // Redis 기본 포트
-        configuration.setPassword(password); // 비밀번호 설정
+//         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+//         configuration.setHostName(host);
+//         configuration.setPort(6379); // Redis 기본 포트
+//         configuration.setPassword(password); // 비밀번호 설정
 
-        return new LettuceConnectionFactory(configuration); // Redis 호스트와 포트 설정
+//         return new LettuceConnectionFactory(configuration); // Redis 호스트와 포트 설정
 
 
         /* 로컬에서 접속 시 */
-        //return new LettuceConnectionFactory("localhost", 6379); // Redis 호스트와 포트 설정
+        return new LettuceConnectionFactory("localhost", 6379); // Redis 호스트와 포트 설정
     }
 
     // RedisTemplate 설정
