@@ -30,10 +30,14 @@ public enum ErrorCode {
     NOT_FOUND_CATEGORY(HttpStatus.NOT_FOUND, "ERR018", "카테고리를 찾을 수 없습니다."),
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND, "ERR019", "상품을 찾을 수 없습니다."),
     INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "ERR020", "요청하신 수량이 재고 수량을 초과했습니다."),
-    NOT_FOUND_CACHE(HttpStatus.INTERNAL_SERVER_ERROR, "ERR021", "해당 이름의 캐시가 존재하지 않습니다."),
+    NOT_FOUND_COUPON(HttpStatus.NOT_FOUND, "ERR021", "쿠폰을 찾을 수 없습니다."),
+    INSUFFICIENT_COUPON(HttpStatus.BAD_REQUEST, "ERR022", "요청하신 쿠폰이 재고 쿠폰 수량을 초과했습니다."),
+    NOT_FOUND_CACHE(HttpStatus.INTERNAL_SERVER_ERROR, "ERR023", "해당 이름의 캐시가 존재하지 않습니다."),
     ;
 
 
+
+    public static ErrorCode LOCK_TIMEOUT;
     private final HttpStatus httpStatus;
     private final String status;
     private final String message;
