@@ -5,10 +5,12 @@ import com.sparta.able.dto.product.res.ProductListResponseDto;
 import com.sparta.able.dto.product.res.ProductResponseDto;
 import com.sparta.able.dto.product.res.SearchResultDto;
 import com.sparta.able.security.OwnerDetailsImpl;
+import com.sparta.able.service.KeywordCacheService;
 import com.sparta.able.service.KeywordService;
 import com.sparta.able.service.ProductService;
 import com.sparta.able.util.ResponseBodyDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +23,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
     private final KeywordService keywordService;
+    private final KeywordCacheService keywordCacheService;
 
     @Secured("ROLE_OWNER")
     @PostMapping
@@ -74,12 +78,13 @@ public class ProductController {
     }
 
     @GetMapping("/search-v2")
-    @Cacheable(value = "searchCount", key= "#keyword")
     public ResponseEntity<ResponseBodyDto<SearchResultDto>> searchProducts2(@RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
                                                                            @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                                                            @RequestParam(name = "keyword", defaultValue = "") String keyword) {
+        log.info("로직 시작");
         if (StringUtils.hasText(keyword)) {
-            keywordService.updateKeyword(keyword);
+            int usedCount = keywordCacheService.addCache(keyword);
+            keywordCacheService.updateCache(keyword, usedCount);
         }
 
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
