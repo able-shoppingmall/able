@@ -9,6 +9,7 @@ import com.sparta.able.entity.Product;
 import com.sparta.able.exception.ApplicationException;
 import com.sparta.able.exception.ErrorCode;
 import com.sparta.able.redis.LockableService;
+import com.sparta.able.redis.RedisLockRepository;
 import com.sparta.able.repository.ProductRepository;
 import com.sparta.able.security.OwnerDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService implements LockableService<Product> {
 
+    private final RedisLockRepository redisLockRepository;
     private final ProductRepository productRepository;
 
     public ProductResponseDto createProduct(ProductCreateRequestDto req, OwnerDetailsImpl authUser) {
@@ -55,12 +57,45 @@ public class ProductService implements LockableService<Product> {
         return new ProductListResponseDto(slice);
     }
 
-    public void decrease(Long id, int purchasedAmount) {
-        Product product = productRepository.findById(id).orElseThrow(
-                () -> new ApplicationException(ErrorCode.NOT_FOUND_PRODUCT)
-        );
+    public void decrease(Long id, int purchasedAmount) throws InterruptedException {
+        // Lock 획득
+        while (!redisLockRepository.lock(this.getClass().getSimpleName(), id)) {
+            Thread.sleep(100);
+        }
 
-        product.decrease(purchasedAmount);
-        productRepository.save(product);
+        // Lock 획득에 성공했다면 로직 실행
+        try {
+            Product product = productRepository.findById(id).orElseThrow(
+                    () -> new ApplicationException(ErrorCode.NOT_FOUND_PRODUCT)
+            );
+
+            product.decrease(purchasedAmount);
+            productRepository.save(product);
+        } finally {
+            // 로직이 모두 수행되었다면 Lock 해제
+            redisLockRepository.unlock(this.getClass().getSimpleName(), id);
+        }
+    }
+
+    public ProductResponseDto purchase(Long productId, int amount) throws InterruptedException {
+        // Lock 획득
+        while (!redisLockRepository.lock(this.getClass().getSimpleName(), productId)) {
+            Thread.sleep(100);
+        }
+
+        // Lock 획득에 성공했다면 로직 실행
+        try {
+            Product product = productRepository.findById(productId).orElseThrow(
+                    () -> new ApplicationException(ErrorCode.NOT_FOUND_PRODUCT)
+            );
+
+            product.decrease(amount);
+            productRepository.save(product);
+
+            return product.toResponseDto();
+        } finally {
+            // 로직이 모두 수행되었다면 Lock 해제
+            redisLockRepository.unlock(this.getClass().getSimpleName(), productId);
+        }
     }
 }

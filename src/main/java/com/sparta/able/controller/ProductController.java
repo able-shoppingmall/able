@@ -61,6 +61,17 @@ public class ProductController {
                 HttpStatus.OK);
     }
 
+    @PutMapping("/{productId}/purchase")
+    public ResponseEntity<ResponseBodyDto<ProductResponseDto>> purchaseProduct (@PathVariable Long productId,
+                                                                                @RequestParam int amount) throws InterruptedException {
+        return new ResponseEntity<>(
+                ResponseBodyDto.success(
+                        "상품 구매 성공",
+                        productService.purchase(productId, amount)
+                ),
+                HttpStatus.OK);
+    }
+
 
     @GetMapping("/search-v1")
     public ResponseEntity<ResponseBodyDto<SearchResultDto>> searchProducts(@RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
