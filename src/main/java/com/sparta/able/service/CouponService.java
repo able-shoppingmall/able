@@ -65,9 +65,8 @@ public class CouponService implements LockableService<Coupon> {
 
     @Override
     @Locked
-    // 쿠폰 감소 로직
     public void decrease(Long couponId, int amount) {
-
+        // 1. 데이터베이스에서 쿠폰 조회 및 검증
         Coupon coupon = couponRepository.findById(couponId).orElseThrow(
                 () -> new ApplicationException(ErrorCode.NOT_FOUND_COUPON)
         );
@@ -76,9 +75,25 @@ public class CouponService implements LockableService<Coupon> {
             throw new ApplicationException(ErrorCode.INSUFFICIENT_COUPON);
         }
 
+        // 2. Redis에서 재고 감소
+        String redisKey = "coupon_stock:" + couponId;
+        Long redisStock = redisTemplate.opsForValue().decrement(redisKey, amount);
+
+        if (redisStock == null || redisStock < 0) {
+            // Redis 재고가 부족하면 복구 및 예외 처리
+            redisTemplate.opsForValue().increment(redisKey, amount); // 복구
+            throw new ApplicationException(ErrorCode.INSUFFICIENT_COUPON, "Redis 재고가 부족합니다.");
+        }
+
+        // 3. 데이터베이스에서 재고 감소
         coupon.decrease(amount);
         couponRepository.save(coupon);
+
+        // 로그 출력
+        System.out.println("Redis에서 읽은 쿠폰 재고: " + redisStock);
+        System.out.println("데이터베이스에서 감소된 쿠폰 재고: " + coupon.getCount());
     }
+
 
     public <T> void decreaseWithLock(Class<T> entityType, Long id, int amount) throws InterruptedException {
         String lockKey = redisLockRepository.generateKey(entityType.getSimpleName(), id);
