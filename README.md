@@ -41,11 +41,20 @@ https://www.notion.so/teamsparta/30261dd286e140139a979cf6a7d2b8fe?v=c73c31355141
 
 ## 와이어프레임
 https://www.figma.com/board/jsWVjjyKfxR48pTlnp8DIP/10%EC%A1%B0-%EC%87%BC%ED%95%91%EB%AA%B0?node-id=0-1&t=dlfmKCeISrtAAXP6-1
+
 <br/>
 
 ## 쿠폰 발급 트러블 슈팅
 https://velog.io/@yeonu6550/%EB%8F%99%EC%8B%9C%EC%84%B1-%EC%A0%9C%EC%96%B4-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85
+
 <br/>
 
 ## DB vs Cache 부하 테스트 결과
 https://development-diary-for-me.tistory.com/209
+
+<br/>
+
+## 시연 영상
+https://drive.google.com/file/d/1kF6QAq7jEz5qXfv4PtlsS2AGvhiSEXTv/view?usp=drive_link
+
+<br/>
